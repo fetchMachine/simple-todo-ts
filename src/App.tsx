@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Input, Button, Checkbox, Radiogroup } from './common';
 
-function App() {
+const users = [{ id: 1, name: 'Евклидий', isBanned: true }, { id: 2, name: 'Петр', isBanned: false }]
+
+const filters = [
+  { id: '1', label: 'Забаненные', value: 'banned' },
+  { id: '2', label: 'Активные', value: 'active' },
+  { id: '3', label: 'Все', value: 'all' },
+];
+
+const filterState: string = 'all';
+
+export const App = () =>  {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Input value="Аноним" />
+      <Button onClick={ () => alert('Когда-нибудь добавлю') }>Добавить пользователя</Button>
+
+      <Radiogroup items={ filters } name="filter" value={ filterState } />
+
+      <ul>
+        {users
+          .filter((user): boolean => {
+            if (filterState === 'all') {
+              return true;
+            }
+
+            if (filterState === 'active') {
+              return !user.isBanned;
+            }
+
+            return user.isBanned;
+          })
+          .map((user) => (
+          <li key={ user.id }>
+            <Checkbox checked={ user.isBanned } />
+            {user.name}
+            {user.isBanned && <Button type='submit' onClick={ () => alert('Когда-нибудь удалю') }>Удалить пользователя</Button>}
+            {/* <button disabled={ !user.isBanned } onClick={ () => alert('Когда-нибудь удалю') }>Удалить пользователя</button> */}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
-
-export default App;
