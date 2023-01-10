@@ -1,12 +1,13 @@
 import type { FC, PropsWithChildren } from 'react';
 import css from './styles.module.css';
+import cn from 'classnames';
 
 interface ButtonProps {
   onClick: () => void;
   disabled?: boolean;
-  type?: 'alert' | 'submit';
+  className?: string;
 }
 
 export const Button: FC<PropsWithChildren<ButtonProps>> = ({
-  children, onClick, disabled, type = 'submit'
-}) => <button className={ css[type] } onClick={ onClick } disabled={ disabled }>{ children }</button>
+  children, onClick, disabled, className
+}) => <button className={ cn(css.btn, className) } onClick={ onClick } disabled={ disabled }>{ children }</button>

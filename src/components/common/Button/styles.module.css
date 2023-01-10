@@ -1,7 +1,10 @@
-.alert {
-  color: red;
-}
-
-.submit {
-  color: green;
+.btn {
+  min-width: 150px;
+  height: 25px;
+  display: flex-inline;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: unset;
+  cursor: pointer;
 }
