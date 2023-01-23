@@ -1,12 +1,7 @@
 import { Component } from 'react';
-import { Input, Button, Checkbox, Radiogroup } from './common';
-import css from './app.module.css';
-
-interface User {
-  id: number;
-  name: string;
-  isBanned: boolean;
-}
+import { Input, Button, Radiogroup, ErrorBoundary } from './common';
+import { User as IUser } from './types';
+import { User } from './User';
 
 interface AppProps {
   className?: string;
@@ -14,17 +9,15 @@ interface AppProps {
 
 interface AppState {
   newUserInput: string;
-  users: User[];
+  users: IUser[];
   filter: string;
-  counter: number;
 }
 
 export class App extends Component<AppProps, AppState> {
   state: AppState = {
     newUserInput: '',
     users: [],
-    filter: 'all',
-    counter: 0,
+    filter: 'all'
   };
 
   filters = [
@@ -46,7 +39,7 @@ export class App extends Component<AppProps, AppState> {
     }));
   }
 
-  deleteUserHandler (id: User['id']) {
+  deleteUserHandler (id: IUser['id']) {
     this.setState((prevState) => ({
       users: prevState.users.filter((user) => user.id !== id)
     }));
@@ -56,7 +49,7 @@ export class App extends Component<AppProps, AppState> {
     this.setState({ filter });
   }
 
-  toggleUserHandler = (id: User['id']) => {
+  toggleUserHandler = (id: IUser['id']) => {
     this.setState((prevState) => ({
       users: prevState.users.map((user) => user.id === id ? { ...user, isBanned: !user.isBanned } : user),
     }));
@@ -72,7 +65,7 @@ export class App extends Component<AppProps, AppState> {
     }
   }
 
-  componentDidUpdate (prevProps: any, prevState: any) {
+  componentDidUpdate (prevProps: AppProps, prevState: AppState) {
     if (prevState.users !== this.state.users) {
       localStorage.setItem(this.localStorageKey, JSON.stringify(this.state.users));
     }
@@ -87,27 +80,27 @@ export class App extends Component<AppProps, AppState> {
 
         <Radiogroup onChange={ this.changeFilterHandler } items={ this.filters } name="filter" value={ this.state.filter } />
 
-        <ul>
-          {this.state.users
-            .filter((user): boolean => {
-              if (this.state.filter === 'all') {
-                return true;
-              }
+        <ErrorBoundary fallback={ <span>Broken</span> }>
+          <ul>
+            {this.state.users
+              .filter((user): boolean => {
+                if (this.state.filter === 'all') {
+                  return true;
+                }
 
-              if (this.state.filter === 'active') {
-                return !user.isBanned;
-              }
+                if (this.state.filter === 'active') {
+                  return !user.isBanned;
+                }
 
-              return user.isBanned;
-            })
-            .map((user) => (
-            <li key={ user.id }>
-              <Checkbox checked={ user.isBanned } onChange={ () => this.toggleUserHandler(user.id) } />
-              {user.name}
-              {user.isBanned && <Button className={ css.alertBtn } onClick={ () => this.deleteUserHandler(user.id) }>Удалить пользователя</Button>}
-            </li>
-          ))}
-        </ul>
+                return user.isBanned;
+              })
+              .map((user) => (
+              <li key={ user.id }>
+                <User user={ user } deleteUserHandler={ this.deleteUserHandler } toggleUserHandler={ this.toggleUserHandler } />
+              </li>
+            ))}
+          </ul>
+        </ErrorBoundary>
       </div>
     );
   }
