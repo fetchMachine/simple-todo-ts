@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import css from './styles.module.css';
 import cn from 'classnames';
 
@@ -8,6 +8,10 @@ interface ButtonProps {
   className?: string;
 }
 
-export const Button: FC<PropsWithChildren<ButtonProps>> = ({
+export const Button: FC<PropsWithChildren<ButtonProps>> = React.memo(({
   children, onClick, disabled, className
-}) => <button className={ cn(css.btn, className) } onClick={ onClick } disabled={ disabled }>{ children }</button>
+}) => {
+  console.log('btn is rendered');
+
+  return <button className={ cn(css.btn, className) } onClick={ onClick } disabled={ disabled }>{ children }</button>
+})
