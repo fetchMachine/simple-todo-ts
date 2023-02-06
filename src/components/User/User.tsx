@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { type FC, useState } from 'react';
 import type { User as IUser } from '../types';
 import { Button, Checkbox, Input } from 'components/common';
 import css from './user.module.css';

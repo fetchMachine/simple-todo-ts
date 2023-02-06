@@ -11,7 +11,5 @@ interface ButtonProps {
 export const Button: FC<PropsWithChildren<ButtonProps>> = React.memo(({
   children, onClick, disabled, className
 }) => {
-  console.log('btn is rendered');
-
   return <button className={ cn(css.btn, className) } onClick={ onClick } disabled={ disabled }>{ children }</button>
 })

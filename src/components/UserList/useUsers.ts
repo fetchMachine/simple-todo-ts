@@ -7,10 +7,10 @@ const localStorageKey = '__users__';
 export const useUsers = (newUser: string, onAdd: () => void) => {
   const [ users, setUsers ] = useState<User[]>(JSON.parse(localStorage.getItem(localStorageKey) ?? '[]'));
 
-  const addUserHandler = useCallback(() => {
+  const addUserHandler = () => {
     setUsers((prevUsers) => [ ...prevUsers, { name: newUser, id: uuidv4(), isBanned: false } ]);
     onAdd();
-  }, [ setUsers, newUser, onAdd ]);
+  };
 
   const userChangeHandler = (id: User['id'], newUser: Partial<User>) => {
     setUsers((prevUsers) => prevUsers.map((user) => user.id === id ? { ...user, ...newUser } : user));

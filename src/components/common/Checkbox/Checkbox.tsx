@@ -1,4 +1,4 @@
-import type { FC, ChangeEvent } from 'react';
+import React, { type  FC, type ChangeEvent } from 'react';
 
 interface CheckboxProps {
   checked: boolean;
