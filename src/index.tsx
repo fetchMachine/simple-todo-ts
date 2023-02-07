@@ -1,8 +1,15 @@
 import ReactDOM from 'react-dom/client';
-import { App } from './components/App';
+import { Provider } from 'react-redux';
 import { UserList } from './components/UserList';
 import { ErrorBoundary } from './components/common';
+import { store } from './store';
 
 ReactDOM
   .createRoot(document.getElementById('myRoot') as HTMLElement)
-  .render(<ErrorBoundary fallback={ <span>App is Broken</span> }><UserList /></ErrorBoundary>);
+  .render(
+    <Provider store={ store }>
+      <ErrorBoundary fallback={ <span>App is Broken</span> }>
+        <UserList />
+      </ErrorBoundary>
+    </Provider>
+  );

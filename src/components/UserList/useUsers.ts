@@ -1,23 +1,33 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { User } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsers, addUser, changeUser, deleteUser, setUsers } from 'store';
 
 const localStorageKey = '__users__';
 
 export const useUsers = (newUser: string, onAdd: () => void) => {
-  const [ users, setUsers ] = useState<User[]>(JSON.parse(localStorage.getItem(localStorageKey) ?? '[]'));
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem(localStorageKey) ?? '[]');
+
+    dispatch(setUsers(users));
+  }, [ dispatch ]);
+
+  const users = useSelector(getUsers);
+
 
   const addUserHandler = () => {
-    setUsers((prevUsers) => [ ...prevUsers, { name: newUser, id: uuidv4(), isBanned: false } ]);
+    dispatch(addUser({ name: newUser, isBanned: false }))
     onAdd();
   };
 
   const userChangeHandler = (id: User['id'], newUser: Partial<User>) => {
-    setUsers((prevUsers) => prevUsers.map((user) => user.id === id ? { ...user, ...newUser } : user));
+    dispatch(changeUser(id, newUser))
   }
 
   const deleteUserHandler = (id: User['id']) => {
-    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+    dispatch(deleteUser(id))
   }
 
   useEffect(() => {
